@@ -4,7 +4,11 @@
  */
 import h from './helpers.js';
 
+import * as faceapi from '../dist/face-api.esm.js';  
+let optionsSSDMobileNet;
+
 window.addEventListener( 'load', () => {
+    console.log('RTC');
     const room = h.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
 
@@ -18,6 +22,8 @@ window.addEventListener( 'load', () => {
 
     else {
         let commElem = document.getElementsByClassName( 'room-comm' );
+        let roomID =  document.getElementById("room-id");
+        roomID.innerText = new URL(location.href).searchParams .get('room');
 
         for ( let i = 0; i < commElem.length; i++ ) {
             commElem[i].attributes.removeNamedItem( 'hidden' );
@@ -189,17 +195,25 @@ window.addEventListener( 'load', () => {
             //add
             pc[partnerName].ontrack = ( e ) => {
                 let str = e.streams[0];
+                console.log("pc[partnerName].ontrack",str,partnerName);
                 if ( document.getElementById( `${ partnerName }-video` ) ) {
                     document.getElementById( `${ partnerName }-video` ).srcObject = str;
                 }
 
                 else {
                     //video elem
-                    let newVid = document.createElement( 'video' );
-                    newVid.id = `${ partnerName }-video`;
-                    newVid.srcObject = str;
-                    newVid.autoplay = true;
-                    // newVid.className = 'col video-main';
+                    let video = document.createElement( 'video' );
+                    video.id = `${ partnerName }-video`;
+                    video.srcObject = str;
+                    video.autoplay = true;
+
+                    
+                    let canvas = document.createElement( 'canvas' );
+                    canvas.id = `${ partnerName }-canvas`;
+                    canvas.className = 'canvas';
+
+
+                    // video.className = 'col video-main';
 
                     //video controls elements
                     // let controlDiv = document.createElement( 'div' );
@@ -211,7 +225,8 @@ window.addEventListener( 'load', () => {
                     let cardDiv = document.createElement( 'div' );
                     cardDiv.className = 'video-item';
                     cardDiv.id = partnerName;
-                    cardDiv.appendChild( newVid );
+                    cardDiv.appendChild( video );
+                    cardDiv.appendChild( canvas );
                     // cardDiv.appendChild( controlDiv );
 
                     let mainVidDiv = document.createElement( 'div' );
@@ -220,7 +235,11 @@ window.addEventListener( 'load', () => {
 
                     //put div in main-section elem
                     document.getElementById( 'videos' ).appendChild( mainVidDiv );
-
+                    console.log("optionsSSDMobileNet",optionsSSDMobileNet)
+                    
+                    video.onloadeddata = async () => {
+                        detectVideo(video, canvas); 
+                    }
                     h.adjustVideoElemSize();
                 }
             };
@@ -385,22 +404,25 @@ window.addEventListener( 'load', () => {
         document.getElementById( 'toggle-video' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
 
-            let elem = document.getElementById( 'toggle-video' );
-
-            if ( myStream.getVideoTracks()[0].enabled ) {
-                e.target.classList.remove( 'fa-video' );
-                e.target.classList.add( 'fa-video-slash' );
+            let elem = document.getElementById( 'toggle-video' ); 
+                
+            if ( myStream.getVideoTracks()[0].enabled ) { 
+                elem.children[0].className = "fa fa-video-slash text-white";
+                // e.target.classList.remove( 'fa-video' );
+                // e.target.classList.add( 'fa-video-slash' );
                 elem.setAttribute( 'title', 'Show Video' );
 
                 myStream.getVideoTracks()[0].enabled = false;
-            }
-
-            else {
-                e.target.classList.remove( 'fa-video-slash' );
-                e.target.classList.add( 'fa-video' );
+                document.getElementById("col-local").hidden = true; 
+            } 
+            else { 
+                elem.children[0].className = "fa fa-video text-white";
+                // e.target.classList.remove( 'fa-video-slash' );
+                // e.target.classList.add( 'fa-video' );
                 elem.setAttribute( 'title', 'Hide Video' );
 
                 myStream.getVideoTracks()[0].enabled = true;
+                document.getElementById("col-local").hidden = false; 
             }
 
             broadcastNewTracks( myStream, 'video' );
@@ -414,16 +436,17 @@ window.addEventListener( 'load', () => {
             let elem = document.getElementById( 'toggle-mute' );
 
             if ( myStream.getAudioTracks()[0].enabled ) {
-                e.target.classList.remove( 'fa-microphone-alt' );
-                e.target.classList.add( 'fa-microphone-alt-slash' );
+                elem.children[0].className = "fa fa-microphone-alt-slash text-white";
+                // e.target.classList.remove( 'fa-microphone-alt' );
+                // e.target.classList.add( 'fa-microphone-alt-slash' );
                 elem.setAttribute( 'title', 'Unmute' );
 
                 myStream.getAudioTracks()[0].enabled = false;
-            }
-
-            else {
-                e.target.classList.remove( 'fa-microphone-alt-slash' );
-                e.target.classList.add( 'fa-microphone-alt' );
+            } 
+            else { 
+                elem.children[0].className = "fa fa-microphone-alt text-white";
+                // e.target.classList.remove( 'fa-microphone-alt-slash' );
+                // e.target.classList.add( 'fa-microphone-alt' );
                 elem.setAttribute( 'title', 'Mute' );
 
                 myStream.getAudioTracks()[0].enabled = true;
@@ -499,3 +522,72 @@ window.addEventListener( 'load', () => {
         } );
     }
 } );
+
+
+// helper function to draw detected faces
+function drawFaces(canvas, data, fps) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // draw title
+    ctx.font = 'small-caps 20px "Segoe UI"';
+    ctx.fillStyle = 'white';
+    ctx.fillText(`FPS: ${fps}`, 10, 25);
+    for (const person of data) {
+      // draw box around each face
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'deepskyblue';
+      ctx.fillStyle = 'deepskyblue';
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.rect(person.detection.box.x, person.detection.box.y, person.detection.box.width, person.detection.box.height);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      // const expression = person.expressions.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
+      const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
+      ctx.fillStyle = 'black';
+      ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
+      ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
+      ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
+      ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
+      ctx.fillStyle = 'lightblue';
+      ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 60);
+      ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 42);
+      ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
+      ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
+      // draw face points for each face
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = 'lightblue';
+      const pointSize = 2;
+      for (let i = 0; i < person.landmarks.positions.length; i++) {
+        ctx.beginPath();
+        ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
+        // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
+        ctx.fill();
+      }
+    }
+  }
+
+async function detectVideo(video, canvas) {  
+    canvas.width = video.videoWidth; 
+    canvas.height = video.videoHeight; 
+    if (!video || video.paused) return false;
+    const t0 = performance.now();
+    faceapi
+        .detectAllFaces(video, optionsSSDMobileNet)
+        .withFaceLandmarks()
+        .withFaceExpressions()
+        // .withFaceDescriptors()
+        .withAgeAndGender()
+        .then((result) => {
+        const fps = 1000 / (performance.now() - t0);
+        drawFaces(canvas, result, fps.toLocaleString());
+        requestAnimationFrame(() => detectVideo(video, canvas));
+        return true;
+        })
+        .catch((err) => {
+        console.log(`Detect Error: ${str(err)}`);
+        return false;
+        });
+    return false;
+}

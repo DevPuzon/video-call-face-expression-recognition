@@ -135,22 +135,22 @@ async function setupCamera() {
   if (settings.aspectRatio) settings.aspectRatio = Math.trunc(100 * settings.aspectRatio) / 100;
   log(`Camera active: ${track.label}`); // ${str(constraints)}
   log(`Camera settings: ${str(settings)}`);
-  canvas.addEventListener('click', () => {
-    // @ts-ignore
-    if (video && video.readyState >= 2) {
-      // @ts-ignore
-      if (video.paused) {
-        // @ts-ignore
-        video.play();
-        detectVideo(video, canvas);
-      } else {
-        // @ts-ignore
-        // video.pause();
-      }
-    }
-    // @ts-ignore
-    log(`Camera state: ${video.paused ? 'paused' : 'playing'}`);
-  });
+  // canvas.addEventListener('click', () => {
+  //   // @ts-ignore
+  //   if (video && video.readyState >= 2) {
+  //     // @ts-ignore
+  //     if (video.paused) {
+  //       // @ts-ignore
+  //       video.play();
+  //       detectVideo(video, canvas);
+  //     } else {
+  //       // @ts-ignore
+  //       // video.pause();
+  //     }
+  //   }
+  //   // @ts-ignore
+  //   log(`Camera state: ${video.paused ? 'paused' : 'playing'}`);
+  // });
   
   return new Promise((resolve) => {
     video.onloadeddata = async () => {
