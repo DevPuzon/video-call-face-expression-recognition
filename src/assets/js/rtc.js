@@ -141,6 +141,7 @@ window.addEventListener( 'load', () => {
 
 
         function init( createOffer, partnerName ) {
+            console.log("init",createOffer,partnerName);
             pc[partnerName] = new RTCPeerConnection( h.getIceServer() );
 
             if ( screen && screen.getTracks().length ) {
@@ -230,7 +231,7 @@ window.addEventListener( 'load', () => {
                     // cardDiv.appendChild( controlDiv );
 
                     let mainVidDiv = document.createElement( 'div' );
-                    mainVidDiv.className = 'col-6 video-main';
+                    mainVidDiv.className = 'col col-lg-6 col-md-6 col-sm-12 video-main';
                     mainVidDiv.appendChild( cardDiv );
 
                     //put div in main-section elem

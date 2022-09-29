@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Multi-User Video Call</title>
+        <title>Video chat (Face expression recognition)</title>
 
         <meta content="width=device-width, initial-scale=1" name="viewport" />
 
@@ -41,7 +41,7 @@
             </div>
         </div>
         
-        <nav class="navbar fixed-top bg-info rounded-0 d-print-none">
+        <nav class="navbar bg-info rounded-0 d-print-none">
             <div class="text-white">Video Call</div>
 
             <div class="pull-right room-comm" hidden>
@@ -127,14 +127,11 @@
             </div>
         </div>
         
-        <div class="container-fluid room-comm" hidden>
- 
-            
-            
+        <div class="container-fluid room-comm" hidden> 
             <div class="row" >
                 <div class="col-md-12 main" id='main-section'>    
                     <div class="row c-col" id='videos'> 
-                        <div class="col-6 video-main" id="col-local">
+                        <div class="col col-lg-6 col-md-6 col-sm-12 video-main" id="col-local">
                             <div class="video-item" > 
                                 <video  id='local' volume='0' autoplay muted></video>
                                 <canvas id="canvas" class="canvas" ></canvas>

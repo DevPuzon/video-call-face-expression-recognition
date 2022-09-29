@@ -95,64 +95,63 @@ async function detectVideo(video, canvas) {
 }
 
 // just initialize everything and call main function
-async function setupCamera() {
-  const video = document.getElementById('local');
-  const canvas = document.getElementById('canvas');
-  if (!video || !canvas) return null;
+function setupCamera() {  
+  return new Promise( async(resolve) => {
+    const video = document.getElementById('local');
+    const canvas = document.getElementById('canvas');
+    if (!video || !canvas) return null;
 
-  let msg = '';
-  log('Setting up camera');
-  // setup webcam. note that navigator.mediaDevices requires that page is accessed via https
-  if (!navigator.mediaDevices) {
-    log('Camera Error: access not supported');
-    return null;
-  }
-  let stream;
-  const constraints = {
-    audio: false,
-    video: { facingMode: 'user', resizeMode: 'crop-and-scale' },
-  };
-  if (window.innerWidth > window.innerHeight) constraints.video.width = { ideal: window.innerWidth };
-  else constraints.video.height = { ideal: window.innerHeight };
-  try {
-    stream = await navigator.mediaDevices.getUserMedia(constraints);
-  } catch (err) {
-    if (err.name === 'PermissionDeniedError' || err.name === 'NotAllowedError') msg = 'camera permission denied';
-    else if (err.name === 'SourceUnavailableError') msg = 'camera not available';
-    log(`Camera Error: ${msg}: ${err.message || err}`);
-    return null;
-  }
-  // @ts-ignore
-  if (stream) video.srcObject = stream;
-  else {
-    log('Camera Error: stream empty');
-    return null;
-  }
-  const track = stream.getVideoTracks()[0];
-  const settings = track.getSettings();
-  if (settings.deviceId) delete settings.deviceId;
-  if (settings.groupId) delete settings.groupId;
-  if (settings.aspectRatio) settings.aspectRatio = Math.trunc(100 * settings.aspectRatio) / 100;
-  log(`Camera active: ${track.label}`); // ${str(constraints)}
-  log(`Camera settings: ${str(settings)}`);
-  // canvas.addEventListener('click', () => {
-  //   // @ts-ignore
-  //   if (video && video.readyState >= 2) {
-  //     // @ts-ignore
-  //     if (video.paused) {
-  //       // @ts-ignore
-  //       video.play();
-  //       detectVideo(video, canvas);
-  //     } else {
-  //       // @ts-ignore
-  //       // video.pause();
-  //     }
-  //   }
-  //   // @ts-ignore
-  //   log(`Camera state: ${video.paused ? 'paused' : 'playing'}`);
-  // });
-  
-  return new Promise((resolve) => {
+    let msg = '';
+    log('Setting up camera');
+    // setup webcam. note that navigator.mediaDevices requires that page is accessed via https
+    if (!navigator.mediaDevices) {
+      log('Camera Error: access not supported');
+      return null;
+    }
+    let stream;
+    const constraints = {
+      audio: false,
+      video: { facingMode: 'user', resizeMode: 'crop-and-scale' },
+    };
+    if (window.innerWidth > window.innerHeight) constraints.video.width = { ideal: window.innerWidth };
+    else constraints.video.height = { ideal: window.innerHeight };
+    try {
+      stream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (err) {
+      if (err.name === 'PermissionDeniedError' || err.name === 'NotAllowedError') msg = 'camera permission denied';
+      else if (err.name === 'SourceUnavailableError') msg = 'camera not available';
+      log(`Camera Error: ${msg}: ${err.message || err}`);
+      return null;
+    }
+    // @ts-ignore
+    if (stream) video.srcObject = stream;
+    else {
+      log('Camera Error: stream empty');
+      return null;
+    }
+    const track = stream.getVideoTracks()[0];
+    const settings = track.getSettings();
+    if (settings.deviceId) delete settings.deviceId;
+    if (settings.groupId) delete settings.groupId;
+    if (settings.aspectRatio) settings.aspectRatio = Math.trunc(100 * settings.aspectRatio) / 100;
+    log(`Camera active: ${track.label}`); // ${str(constraints)}
+    log(`Camera settings: ${str(settings)}`);
+    // canvas.addEventListener('click', () => {
+    //   // @ts-ignore
+    //   if (video && video.readyState >= 2) {
+    //     // @ts-ignore
+    //     if (video.paused) {
+    //       // @ts-ignore
+    //       video.play();
+    //       detectVideo(video, canvas);
+    //     } else {
+    //       // @ts-ignore
+    //       // video.pause();
+    //     }
+    //   }
+    //   // @ts-ignore
+    //   log(`Camera state: ${video.paused ? 'paused' : 'playing'}`);
+    // });
     video.onloadeddata = async () => {
       // @ts-ignore
       canvas.width = video.videoWidth;
