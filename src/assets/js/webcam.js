@@ -77,8 +77,7 @@ function drawFaces(info, data, fps) {
   info.innerHTML = retStr;
 }
 
-async function detectVideo(video, info) {
-  info.style.width = video.clientWidth+"px";  
+async function detectVideo(video, info) { 
   if (!video || video.paused) return false;
   const t0 = performance.now();
   faceapi
@@ -143,12 +142,9 @@ function setupCamera() {
     log(`Camera active: ${track.label}`); // ${str(constraints)}
     log(`Camera settings: ${str(settings)}`); 
     video.onloadeddata = async () => {
-      // @ts-ignore
-      info.width = video.videoWidth;
-      // @ts-ignore
-      info.height = video.videoHeight;
-      // @ts-ignore
+           
       video.play();
+      // info.style.width = video.clientWidth+"px";
       detectVideo(video, info);
       resolve(true);
     };
