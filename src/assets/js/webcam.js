@@ -36,7 +36,7 @@ function drawFaces(canvas, data, fps) {
   // draw title
   ctx.font = 'small-caps 20px "Segoe UI"';
   ctx.fillStyle = 'white';
-  ctx.fillText(`FPS: ${fps}`, 10, 25);
+  // ctx.fillText(`FPS: ${fps}`, 10, 25);
   for (const person of data) {
     // draw box around each face
     ctx.lineWidth = 3;
@@ -52,16 +52,16 @@ function drawFaces(canvas, data, fps) {
     ctx.fillStyle = 'black';
     ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
     ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
-    ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
-    ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
-    ctx.fillStyle = 'lightblue';
+    // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
+    // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
+    ctx.fillStyle = '#17A2B8';
     ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 60);
     ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 42);
-    ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
-    ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
+    // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
+    // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
     // draw face points for each face
     ctx.globalAlpha = 0.8;
-    ctx.fillStyle = 'lightblue';
+    ctx.fillStyle = '##17A2B8';
     const pointSize = 2;
     for (let i = 0; i < person.landmarks.positions.length; i++) {
       ctx.beginPath();

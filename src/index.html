@@ -42,14 +42,11 @@
         </div>
         
         <nav class="navbar bg-info rounded-0 d-print-none">
-            <div class="text-white">Video Call</div>
+            <div class="text-white">Video chat (Face expression recognition)</div>
 
             <div class="pull-right room-comm" hidden>
                 <span class="text-white mr-5" hidden>
                     Unique Identifier: <span id='randomNumber'></span>
-                </span>
-                <span class="text-white mr-5" >
-                    Room ID: <span id='room-id'></span>
                 </span>
 
                 <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video' title="Hide Video">
@@ -129,9 +126,12 @@
         
         <div class="container-fluid room-comm" hidden> 
             <div class="row" >
-                <div class="col-md-12 main" id='main-section'>    
+                <div class="col-md-12 main" id='main-section'>  
+                    <span class=" mr-5" >
+                        Room ID: <span id='room-id'></span>
+                    </span>
                     <div class="row c-col" id='videos'> 
-                        <div class="col col-lg-6 col-md-6 col-sm-12 video-main" id="col-local">
+                        <div class="col col-12 col-lg-6 col-md-6 col-sm-12 video-main" id="col-local">
                             <div class="video-item" > 
                                 <video  id='local' volume='0' autoplay muted></video>
                                 <canvas id="canvas" class="canvas" ></canvas>
