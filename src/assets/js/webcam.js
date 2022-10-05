@@ -73,6 +73,8 @@ function drawFaces(canvas, data, fps) {
 }
 
 async function detectVideo(video, canvas) {
+  canvas.width = video.videoWidth; 
+  canvas.height = video.videoHeight; 
   if (!video || video.paused) return false;
   const t0 = performance.now();
   faceapi
