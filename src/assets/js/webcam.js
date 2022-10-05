@@ -180,27 +180,29 @@ async function setupFaceAPI() {
   log(`Models loaded: ${str(faceapi.tf.engine().state.numTensors)} tensors`);
 }
 
-async function main() {
-  // initialize tfjs
-  log('FaceAPI WebCam Test');
-
-  // if you want to use wasm backend location for wasm binaries must be specified
-  // await faceapi.tf.setWasmPaths(`https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${faceapi.tf.version_core}/dist/`);
-  // await faceapi.tf.setBackend('wasm');
-
-  // default is webgl backend
-  await faceapi.tf.setBackend('webgl');
-
-  await faceapi.tf.enableProdMode();
-  await faceapi.tf.ENV.set('DEBUG', false);
-  await faceapi.tf.ready();
-
-  // check version
-  log(`Version: FaceAPI ${str(faceapi?.version || '(not loaded)')} TensorFlow/JS ${str(faceapi?.tf?.version_core || '(not loaded)')} Backend: ${str(faceapi?.tf?.getBackend() || '(not loaded)')}`);
-  // log(`Flags: ${JSON.stringify(faceapi?.tf?.ENV.flags || { tf: 'not loaded' })}`);
-
-  await setupFaceAPI();
-  await setupCamera();
+function main() { 
+  setTimeout(async() => {
+    // initialize tfjs
+    log('FaceAPI WebCam Test');
+  
+    // if you want to use wasm backend location for wasm binaries must be specified
+    // await faceapi.tf.setWasmPaths(`https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${faceapi.tf.version_core}/dist/`);
+    // await faceapi.tf.setBackend('wasm');
+  
+    // default is webgl backend
+    await faceapi.tf.setBackend('webgl');
+  
+    await faceapi.tf.enableProdMode();
+    await faceapi.tf.ENV.set('DEBUG', false);
+    await faceapi.tf.ready();
+  
+    // check version
+    log(`Version: FaceAPI ${str(faceapi?.version || '(not loaded)')} TensorFlow/JS ${str(faceapi?.tf?.version_core || '(not loaded)')} Backend: ${str(faceapi?.tf?.getBackend() || '(not loaded)')}`);
+    // log(`Flags: ${JSON.stringify(faceapi?.tf?.ENV.flags || { tf: 'not loaded' })}`);
+  
+    await setupFaceAPI();
+    await setupCamera();
+  }, 10000);
 }
 
 // start processing as soon as page is loaded
