@@ -29,53 +29,56 @@ function log(...txt) {
 }
 
 // helper function to draw detected faces
-function drawFaces(canvas, data, fps) {
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // draw title
-  ctx.font = 'small-caps 20px "Segoe UI"';
-  ctx.fillStyle = 'white';
-  // ctx.fillText(`FPS: ${fps}`, 10, 25);
+function drawFaces(info, data, fps) {
+  // const ctx = info.getContext('2d');
+  // if (!ctx) return;
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // // draw title
+  // ctx.font = 'small-caps 20px "Segoe UI"';
+  // ctx.fillStyle = 'white';
+  // ctx.fillText(`FPS: ${fps}`, 10, 25); 
+  var retStr = "";
   for (const person of data) {
     // draw box around each face
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = 'deepskyblue';
-    ctx.fillStyle = 'deepskyblue';
-    ctx.globalAlpha = 0.6;
-    ctx.beginPath();
-    ctx.rect(person.detection.box.x, person.detection.box.y, person.detection.box.width, person.detection.box.height);
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-    // const expression = person.expressions.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
+    // ctx.lineWidth = 3;
+    // ctx.strokeStyle = 'deepskyblue';
+    // ctx.fillStyle = 'deepskyblue';
+    // ctx.globalAlpha = 0.6;
+    // ctx.beginPath();
+    // ctx.rect(person.detection.box.x, person.detection.box.y, person.detection.box.width, person.detection.box.height);
+    // ctx.stroke();
+    // ctx.globalAlpha = 1;
+    // // const expression = person.expressions.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
+    // const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
+    // ctx.fillStyle = 'black';
+    // ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
+    // ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
+    // // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
+    // // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
+    // ctx.fillStyle = '#17A2B8';
+    // ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 60);
+    // ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 42);
+    // // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
+    // // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
+    // // draw face points for each face
+    // ctx.globalAlpha = 0.8;
+    // ctx.fillStyle = '##17A2B8';
+    // const pointSize = 2;
+    // for (let i = 0; i < person.landmarks.positions.length; i++) {
+    //   ctx.beginPath();
+    //   ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
+    //   // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
+    //   ctx.fill();
+    // }
     const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
-    ctx.fillStyle = 'black';
-    ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
-    ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
-    // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
-    // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
-    ctx.fillStyle = '#17A2B8';
-    ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 60);
-    ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 42);
-    // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
-    // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
-    // draw face points for each face
-    ctx.globalAlpha = 0.8;
-    ctx.fillStyle = '##17A2B8';
-    const pointSize = 2;
-    for (let i = 0; i < person.landmarks.positions.length; i++) {
-      ctx.beginPath();
-      ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
-      // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
-      ctx.fill();
-    }
-  }
+    retStr += `<p><b>Gender : </b>${person.gender}</p>`;
+    retStr += `<p><b>Expression : </b>${expression[0][0]}</p>`; 
+  } 
+  info.innerHTML = retStr;
 }
 
-async function detectVideo(video, canvas) {
-  canvas.width = video.videoWidth; 
-  canvas.height = video.videoHeight; 
-  console.log("detectVideo", canvas.height,canvas.width);
+async function detectVideo(video, info) {
+  info.style.width = video.clientWidth+"px";  
   if (!video || video.paused) return false;
   const t0 = performance.now();
   faceapi
@@ -86,8 +89,8 @@ async function detectVideo(video, canvas) {
     .withAgeAndGender()
     .then((result) => {
       const fps = 1000 / (performance.now() - t0);
-      drawFaces(canvas, result, fps.toLocaleString());
-      requestAnimationFrame(() => detectVideo(video, canvas));
+      drawFaces(info, result, fps.toLocaleString());
+      requestAnimationFrame(() => detectVideo(video, info));
       return true;
     })
     .catch((err) => {
@@ -101,8 +104,8 @@ async function detectVideo(video, canvas) {
 function setupCamera() {  
   return new Promise( async(resolve) => {
     const video = document.getElementById('local');
-    const canvas = document.getElementById('canvas');
-    if (!video || !canvas) return null;
+    const info = document.getElementById('info');
+    if (!video || !info) return null;
 
     let msg = '';
     log('Setting up camera');
@@ -138,31 +141,15 @@ function setupCamera() {
     if (settings.groupId) delete settings.groupId;
     if (settings.aspectRatio) settings.aspectRatio = Math.trunc(100 * settings.aspectRatio) / 100;
     log(`Camera active: ${track.label}`); // ${str(constraints)}
-    log(`Camera settings: ${str(settings)}`);
-    // canvas.addEventListener('click', () => {
-    //   // @ts-ignore
-    //   if (video && video.readyState >= 2) {
-    //     // @ts-ignore
-    //     if (video.paused) {
-    //       // @ts-ignore
-    //       video.play();
-    //       detectVideo(video, canvas);
-    //     } else {
-    //       // @ts-ignore
-    //       // video.pause();
-    //     }
-    //   }
-    //   // @ts-ignore
-    //   log(`Camera state: ${video.paused ? 'paused' : 'playing'}`);
-    // });
+    log(`Camera settings: ${str(settings)}`); 
     video.onloadeddata = async () => {
       // @ts-ignore
-      canvas.width = video.videoWidth;
+      info.width = video.videoWidth;
       // @ts-ignore
-      canvas.height = video.videoHeight;
+      info.height = video.videoHeight;
       // @ts-ignore
       video.play();
-      detectVideo(video, canvas);
+      detectVideo(video, info);
       resolve(true);
     };
   });
@@ -183,29 +170,27 @@ async function setupFaceAPI() {
   log(`Models loaded: ${str(faceapi.tf.engine().state.numTensors)} tensors`);
 }
 
-function main() { 
-  setTimeout(async() => {
-    // initialize tfjs
-    log('FaceAPI WebCam Test');
-  
-    // if you want to use wasm backend location for wasm binaries must be specified
-    // await faceapi.tf.setWasmPaths(`https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${faceapi.tf.version_core}/dist/`);
-    // await faceapi.tf.setBackend('wasm');
-  
-    // default is webgl backend
-    await faceapi.tf.setBackend('webgl');
-  
-    await faceapi.tf.enableProdMode();
-    await faceapi.tf.ENV.set('DEBUG', false);
-    await faceapi.tf.ready();
-  
-    // check version
-    log(`Version: FaceAPI ${str(faceapi?.version || '(not loaded)')} TensorFlow/JS ${str(faceapi?.tf?.version_core || '(not loaded)')} Backend: ${str(faceapi?.tf?.getBackend() || '(not loaded)')}`);
-    // log(`Flags: ${JSON.stringify(faceapi?.tf?.ENV.flags || { tf: 'not loaded' })}`);
-  
-    await setupFaceAPI();
-    await setupCamera();
-  }, 10000);
+async function main() { 
+  // initialize tfjs
+  log('FaceAPI WebCam Test');
+
+  // if you want to use wasm backend location for wasm binaries must be specified
+  // await faceapi.tf.setWasmPaths(`https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${faceapi.tf.version_core}/dist/`);
+  // await faceapi.tf.setBackend('wasm');
+
+  // default is webgl backend
+  await faceapi.tf.setBackend('webgl');
+
+  await faceapi.tf.enableProdMode();
+  await faceapi.tf.ENV.set('DEBUG', false);
+  await faceapi.tf.ready();
+
+  // check version
+  log(`Version: FaceAPI ${str(faceapi?.version || '(not loaded)')} TensorFlow/JS ${str(faceapi?.tf?.version_core || '(not loaded)')} Backend: ${str(faceapi?.tf?.getBackend() || '(not loaded)')}`);
+  // log(`Flags: ${JSON.stringify(faceapi?.tf?.ENV.flags || { tf: 'not loaded' })}`);
+
+  await setupFaceAPI();
+  await setupCamera();
 }
 
 // start processing as soon as page is loaded
