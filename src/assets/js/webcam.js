@@ -27,6 +27,198 @@ function log(...txt) {
   const div = document.getElementById('log');
   if (div) div.innerHTML += `<br>${txt}`;
 }
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getOtherEmotion(emotion){
+  let emotions = {
+    "neutral":[
+      'Confidence',
+      'Relaxed'
+    ],
+    "happy":[
+      'Affection',
+      'Amused',
+      'Confidence',
+      'Happiness',
+      'Love',
+      'Relief',
+      'Contentment',
+      'Amusement',
+      'Joy',
+      'Pride',
+      'Excitement',
+      'Peace',
+      'Satisfaction',
+    ],
+    "sad":[
+      'Fatigue',
+      'Sympathy' , 
+      'Lonely',
+      'Heartbroken',
+      'Gloomy',
+      'Disappointed',
+      'Hopeless',
+      'Grieved',
+      'Unhappy',
+      'Lost',
+      'Troubled',
+      'Resigned',
+      'Miserable' 
+    ],
+    "angry":[ 
+      'Jealous' ,
+      'Irritated',
+      'Upset',
+      'Mad',
+      'Annoyed',
+      'Frustrated',
+      'Peeved',
+      'Contrary',
+      'Bitter',
+      'Infuriated' ,
+      'Cheated',
+      'Vengeful',
+      'Insulted' ,
+    ],
+    "fearful":[
+      'Worry',
+      'Embarrassed',
+      'Terror',
+      'Panic',
+      'Scare',
+      'Worried',
+      'Doubtful',
+      'Nervous',
+      'Anxious',
+      'Terrified',
+      'Panicked',
+      'Horrified',
+      'Desperate',
+      'Confused',
+      'Stressed'
+    ],
+    "disgusted":[
+      'Irritated',
+      'Upset',
+      'Mad',
+      'Fed Up',
+      'Sick',
+      'Dislike',
+      'Revulsion',
+      'Loathing',
+      'Disapproving',
+      'Offended',
+      'Horrified',
+      'Uncomfortable',
+      'Nauseated',
+      'Disturbed',
+      'Withdrawn',
+      'Aversion' 
+    ],
+    "surprised":[
+      'Shocked',
+      'Amazed',
+      'Staggered' 
+    ] 
+  }
+
+  return emotions[emotion].slice(0, -1).join(", ") + ", and "+emotions[emotion].pop();
+}
+
+// Happy
+// Affection 
+// Amused
+// Confidence
+// happiness
+// love
+// relief
+// contentment
+// amusement
+// joy
+// pride
+// excitement
+// peace
+// satisfaction
+
+// Disgusted
+// Irritated
+// Upset
+// Mad
+// Fed up
+// Sick
+// dislike
+// revulsion
+// loathing
+// disapproving
+// offended
+// horrified
+// uncomfortable
+// nauseated
+// disturbed
+// withdrawn
+// aversion
+
+// Angry
+// Annoyed
+// Jealous 
+// Irritated
+// Upset
+// Mad
+// annoyed
+// frustrated
+// peeved
+// contrary
+// bitter
+// infuriated
+// irritated
+// mad
+// cheated
+// vengeful
+// insulted
+
+// Fear
+// Worry
+// Embarrassed
+// Terror
+// Panic
+// Scare
+// worried
+// doubtful
+// nervous
+// anxious
+// terrified
+// panicked
+// horrified
+// desperate
+// confused
+// stressed
+
+// Sad
+// Fatigue
+// Sympathy 
+// lonely
+// lonely
+// heartbroken
+// gloomy
+// disappointed
+// hopeless
+// grieved
+// unhappy
+// lost
+// troubled
+// resigned
+// miserable
+
+// Surprised
+// Shocked
+// Amazed
+// Staggered
+
+// Neutral
+// Confidence
+// Relaxed
 
 // helper function to draw detected faces
 function drawFaces(info, data, fps) {
@@ -71,8 +263,8 @@ function drawFaces(info, data, fps) {
     //   ctx.fill();
     // }
     const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
-    retStr += `<p><b>Gender : </b>${person.gender}</p>`;
-    retStr += `<p><b>Expression : </b>${expression[0][0]}</p>`; 
+    // retStr += `<p><b>Gender : </b>${person.gender}</p>`;
+    retStr += `<p><b>Expression : </b>${capitalizeFirstLetter(expression[0][0])}<br>${getOtherEmotion(expression[0][0])}</p>  `; 
   } 
   info.innerHTML = retStr;
 }
