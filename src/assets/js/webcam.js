@@ -264,7 +264,32 @@ function drawFaces(info, data, fps) {
     // }
     const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
     // retStr += `<p><b>Gender : </b>${person.gender}</p>`;
-    retStr += `<p><b>Expression : </b>${capitalizeFirstLetter(expression[0][0])}<br>${getOtherEmotion(expression[0][0])}</p>  `; 
+    const updateEmoji = (expression)=>{
+      if(expression.toLowerCase() == "neutral"){
+        expression += "😐";
+      }
+      if(expression.toLowerCase() == "happy"){
+        expression += "😊";
+      }
+      if(expression.toLowerCase() == "sad"){
+        expression += "😔";
+      }
+      if(expression.toLowerCase() == "angry"){
+        expression += "😠";
+      }
+      if(expression.toLowerCase() == "fearful"){
+        expression += "😨";
+      }
+      if(expression.toLowerCase() == "disgusted"){
+        expression += "🤢";
+      }
+      if(expression.toLowerCase() == "surprised"){
+        expression += "😲";
+      }
+      console.log("expression",expression);
+      return expression;
+    }
+    retStr += `<p><b>Expression : </b>${capitalizeFirstLetter(updateEmoji(expression[0][0]))}<br>${getOtherEmotion(expression[0][0])}</p>  `; 
   } 
   info.innerHTML = retStr;
 }
