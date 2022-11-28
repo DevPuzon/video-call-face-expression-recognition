@@ -282,3 +282,12 @@
 }
 
 
+.c-info-float {
+    position: absolute; 
+    right: 0px; 
+    top: 0px;
+     margin: 10px;
+}
+.c-info-float p{ 
+    font-size: 80px;
+}
