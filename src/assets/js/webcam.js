@@ -221,48 +221,48 @@ function getOtherEmotion(emotion){
 // Relaxed
 
 // helper function to draw detected faces
-function drawFaces(info,infoFloat, data, fps) {
-  // const ctx = info.getContext('2d');
-  // if (!ctx) return;
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // // draw title
-  // ctx.font = 'small-caps 20px "Segoe UI"';
-  // ctx.fillStyle = 'white';
-  // ctx.fillText(`FPS: ${fps}`, 10, 25); 
+function drawFaces(info,infoFloat, data, fps,canvas) {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // draw title
+  ctx.font = 'small-caps 20px "Segoe UI"';
+  ctx.fillStyle = 'white';
+  ctx.fillText(`FPS: ${fps}`, 10, 25); 
   var retStr = "";
-  // for (const person of data) {
-  //   // draw box around each face
-  //   // ctx.lineWidth = 3;
-  //   // ctx.strokeStyle = 'deepskyblue';
-  //   // ctx.fillStyle = 'deepskyblue';
-  //   // ctx.globalAlpha = 0.6;
-  //   // ctx.beginPath();
-  //   // ctx.rect(person.detection.box.x, person.detection.box.y, person.detection.box.width, person.detection.box.height);
-  //   // ctx.stroke();
-  //   // ctx.globalAlpha = 1;
-  //   // // const expression = person.expressions.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
-  //   // const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
-  //   // ctx.fillStyle = 'black';
-  //   // ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
-  //   // ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
-  //   // // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
-  //   // // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
-  //   // ctx.fillStyle = '#17A2B8';
-  //   // ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 60);
-  //   // ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 42);
-  //   // // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
-  //   // // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
-  //   // // draw face points for each face
-  //   // ctx.globalAlpha = 0.8;
-  //   // ctx.fillStyle = '##17A2B8';
-  //   // const pointSize = 2;
-  //   // for (let i = 0; i < person.landmarks.positions.length; i++) {
-  //   //   ctx.beginPath();
-  //   //   ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
-  //   //   // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
-  //   //   ctx.fill();
-  //   // }
-  // } 
+  for (const person of data) {
+    // draw box around each face
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'deepskyblue';
+    ctx.fillStyle = 'deepskyblue';
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.rect(person.detection.box.x, person.detection.box.y, person.detection.box.width, person.detection.box.height);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    // const expression = person.expressions.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
+    const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
+    ctx.fillStyle = 'black';
+    ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
+    ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
+    // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 23);
+    // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 5);
+    ctx.fillStyle = '#17A2B8';
+    ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 60);
+    ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 42);
+    // ctx.fillText(`age: ${Math.round(person.age)} years`, person.detection.box.x, person.detection.box.y - 24);
+    // ctx.fillText(`roll:${person.angle.roll.toFixed(3)} pitch:${person.angle.pitch.toFixed(3)} yaw:${person.angle.yaw.toFixed(3)}`, person.detection.box.x, person.detection.box.y - 6);
+    // draw face points for each face
+    ctx.globalAlpha = 0.8;
+    ctx.fillStyle = '##17A2B8';
+    const pointSize = 2;
+    for (let i = 0; i < person.landmarks.positions.length; i++) {
+      ctx.beginPath();
+      ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
+      // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
+      ctx.fill();
+    }
+  } 
 
   
   const expression = Object.entries(data[0].expressions).sort((a, b) => b[1] - a[1]);
@@ -297,7 +297,7 @@ function drawFaces(info,infoFloat, data, fps) {
   infoFloat.innerHTML = `<p> ${capitalizeFirstLetter(updateEmoji(expression[0][0]))}</p>`;
 }
 
-async function detectVideo(video, info,infoFloat) { 
+async function detectVideo(video, info,infoFloat,canvas) { 
   if (!video || video.paused) return false;
   const t0 = performance.now();
   faceapi
@@ -308,8 +308,8 @@ async function detectVideo(video, info,infoFloat) {
     .withAgeAndGender()
     .then((result) => {
       const fps = 1000 / (performance.now() - t0);
-      drawFaces(info,infoFloat, result, fps.toLocaleString());
-      requestAnimationFrame(() => detectVideo(video, info,infoFloat));
+      drawFaces(info,infoFloat, result, fps.toLocaleString(),canvas);
+      requestAnimationFrame(() => detectVideo(video, info,infoFloat,canvas));
       return true;
     })
     .catch((err) => {
@@ -324,9 +324,10 @@ function setupCamera() {
   return new Promise( async(resolve) => {
     const video = document.getElementById('local');
     const info = document.getElementById('info');
+    const canvas = document.getElementById('canvas');
     const infoFloat = document.getElementById('info-float');
     
-    if (!video || !info || !infoFloat) return null;
+    if (!video || !info || !infoFloat || !canvas) return null;
 
     let msg = '';
     log('Setting up camera');
@@ -366,8 +367,12 @@ function setupCamera() {
     video.onloadeddata = async () => {
            
       video.play();
+      // @ts-ignore
+      canvas.width = video.videoWidth;
+      // @ts-ignore
+      canvas.height = video.videoHeight;
       // info.style.width = video.clientWidth+"px";
-      detectVideo(video, info,infoFloat);
+      detectVideo(video, info,infoFloat,canvas);
       resolve(true);
     };
   });
