@@ -223,14 +223,19 @@ function getOtherEmotion(emotion){
 // helper function to draw detected faces
 function drawFaces(info,infoFloat, data, fps,canvas) {
   const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  if (!ctx && !data) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // draw title
   ctx.font = 'small-caps 20px "Segoe UI"';
   ctx.fillStyle = 'white';
   ctx.fillText(`FPS: ${fps}`, 10, 25); 
   var retStr = "";
-  for (const person of data) {
+  console.log("data,",data);
+  // for (const person of data) {
+  // } 
+  if(document.getElementById("show-trace").checked){ 
+    const person = data[0];
+
     // draw box around each face
     ctx.lineWidth = 3;
     ctx.strokeStyle = 'deepskyblue';
@@ -241,7 +246,7 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
     ctx.stroke();
     ctx.globalAlpha = 1;
     // const expression = person.expressions.sort((a, b) => Object.values(a)[0] - Object.values(b)[0]);
-    const expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
+    var expression = Object.entries(person.expressions).sort((a, b) => b[1] - a[1]);
     ctx.fillStyle = 'black';
     ctx.fillText(`gender: ${Math.round(100 * person.genderProbability)}% ${person.gender}`, person.detection.box.x, person.detection.box.y - 59);
     ctx.fillText(`expression: ${Math.round(100 * expression[0][1])}% ${expression[0][0]}`, person.detection.box.x, person.detection.box.y - 41);
@@ -257,15 +262,15 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
     ctx.fillStyle = '##17A2B8';
     const pointSize = 2;
     for (let i = 0; i < person.landmarks.positions.length; i++) {
-      ctx.beginPath();
-      ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
-      // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
-      ctx.fill();
+        ctx.beginPath();
+        ctx.arc(person.landmarks.positions[i].x, person.landmarks.positions[i].y, pointSize, 0, 2 * Math.PI);
+        // ctx.fillText(`${i}`, person.landmarks.positions[i].x + 4, person.landmarks.positions[i].y + 4);
+        ctx.fill();
     }
-  } 
+  }
 
   
-  const expression = Object.entries(data[0].expressions).sort((a, b) => b[1] - a[1]);
+  var expression = Object.entries(data[0].expressions).sort((a, b) => b[1] - a[1]);
   // retStr += `<p><b>Gender : </b>${person.gender}</p>`;
   const updateEmoji = (expression)=>{
     if(expression.toLowerCase() == "neutral"){
@@ -313,7 +318,8 @@ async function detectVideo(video, info,infoFloat,canvas) {
       return true;
     })
     .catch((err) => {
-      log(`Detect Error: ${str(err)}`);
+      console.error(`Detect Error: ${err}`);
+      requestAnimationFrame(() => detectVideo(video, info,infoFloat,canvas));
       return false;
     });
   return false;

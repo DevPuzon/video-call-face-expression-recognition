@@ -684,7 +684,7 @@
         return true;
       })
       .catch((err) => {
-        console.log(`Detect Error: ${str(err)}`);
+        console.log(`Detect Error: ${err}`);
         return false;
       });
     return false;

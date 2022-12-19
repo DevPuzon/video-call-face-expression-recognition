@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel='stylesheet' href='assets/css/app.css' type="text/css">
+        <link rel="icon" type="image/png" href="assets/favicon.png" />
 
         <script src="assets/js/webcam.js" type="module"></script> 
         <script src='/socket.io/socket.io.js'></script>
@@ -22,6 +23,12 @@
     </head>
 
     <body>
+        <script>
+            setTimeout(() => {
+                document.getElementById("loading").hidden = true;
+            }, 10000);
+        </script>
+        <div id="loading" class="loading"><img src="/assets/loading.gif" alt=""><h1>Please wait...</h1></div>
         <div class="custom-modal" id='recording-options-modal'>
             <div class="custom-modal-content">
                 <div class="row text-center">
@@ -126,6 +133,13 @@
         
         <div class="container-fluid room-comm" hidden> 
             <div class="row" >
+                <div class="col-12 settings-main"  >
+                    <h6>Settings:</h6>
+                    <div class="settings-container">
+                        <p>Show trace</p>
+                        <input type="checkbox" name="" id="show-trace">
+                    </div>
+                </div>
                 <div class="col-md-12 main" id='main-section'>  
                     <span class=" mr-5" >
                         Room ID: <span id='room-id'></span>

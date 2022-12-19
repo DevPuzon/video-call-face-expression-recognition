@@ -1,3 +1,35 @@
+.loading{
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    background: #fff;
+}
+
+.settings-main{
+    margin-bottom: 14px;
+}
+
+.settings-main h6{
+    margin: 0px;
+}
+
+.settings-container{
+    display: flex;
+    column-gap: 10px;
+}
+
+.settings-container p{
+    margin: 0px;
+}
+
+
+.settings-container{
+
+}
+
 .chat-col{
     right: -100vw;
     bottom: 0;
