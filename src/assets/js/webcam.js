@@ -303,7 +303,7 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
     return expression;
   }
   retStr += `<p>${getOtherEmotion(expression[0][0])}</p>  `; 
-  info.innerHTML = retStr; 
+  // info.innerHTML = retStr; 
   infoFloat.innerHTML = `<p> ${capitalizeFirstLetter(updateEmoji(expression[0][0]))}</p>`;
 }
 
