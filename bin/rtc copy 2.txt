@@ -2,9 +2,9 @@
  * @author Amir Sanni <amirsanni@gmail.com>
  * @date 6th January, 2020
  */
-import h from './helpers.js';
+import h from '../src/assets/js/helpers.js';
 
-import * as faceapi from '../dist/face-api.esm.js';  
+import * as faceapi from '../src/assets/dist/face-api.esm.js';  
 let optionsSSDMobileNet;
 
 window.addEventListener( 'load', () => {

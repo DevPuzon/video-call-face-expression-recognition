@@ -63,8 +63,14 @@ app.get( '/', ( req, res ) => {
 } );
 
 
+app.get( '/not-allow', ( req, res ) => {
+    res.sendFile( __dirname + '/not-allow.html' );
+} );
+
+
 io.of( '/stream' ).on( 'connection', stream );
 
 server.listen( process.env.PORT || 4200)
+console.log(`http://localhost:${process.env.PORT || 4200}`)
 
 

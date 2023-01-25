@@ -4,6 +4,7 @@
  */
 
 import * as faceapi from '../dist/face-api.esm.js'; // use when in dev mode
+import * as rtc  from '../js/rtc.js';
 // import * as faceapi from '@vladmandic/face-api'; // use when downloading face-api as npm
 
 // configuration options
@@ -19,8 +20,7 @@ function str(json) {
   text += json ? JSON.stringify(json).replace(/{|}|"|\[|\]/g, '').replace(/,/g, ', ') : '';
   text += '</font>';
   return text;
-}
-
+} 
 // helper function to print strings to html document as a log
 function log(...txt) {
   console.log(...txt); // eslint-disable-line no-console
@@ -229,8 +229,7 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
   ctx.font = 'small-caps 20px "Segoe UI"';
   ctx.fillStyle = 'white';
   ctx.fillText(`FPS: ${fps}`, 10, 25); 
-  var retStr = "";
-  console.log("data,",data);
+  var retStr = "";  
   // for (const person of data) {
   // } 
   if(document.getElementById("show-trace").checked){ 
@@ -274,27 +273,33 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
   // retStr += `<p><b>Gender : </b>${person.gender}</p>`;
   const updateEmoji = (expression)=>{
     if(expression.toLowerCase() == "neutral"){
-      expression = "😐";
+      expression = "😐"; 
+      rtc.addEmoji(0);
     }
     if(expression.toLowerCase() == "happy"){
       expression = "😊";
+      rtc.addEmoji(1);
     }
     if(expression.toLowerCase() == "sad"){
       expression = "😔";
+      rtc.addEmoji(2);
     }
     if(expression.toLowerCase() == "angry"){
       expression = "😠";
+      rtc.addEmoji(3);
     }
     if(expression.toLowerCase() == "fearful"){
       expression = "😨";
+      rtc.addEmoji(4);
     }
     if(expression.toLowerCase() == "disgusted"){
       expression = "🤢";
+      rtc.addEmoji(5);
     }
     if(expression.toLowerCase() == "surprised"){
       expression = "😲";
-    }
-    console.log("expression",expression);
+      rtc.addEmoji(6);
+    } 
     return expression;
   }
   retStr += `<p>${getOtherEmotion(expression[0][0])}</p>  `; 
@@ -330,9 +335,11 @@ function setupCamera() {
   return new Promise( async(resolve) => {
     const video = document.getElementById('local');
     const info = document.getElementById('info');
+    const infoName = document.getElementById('info-name');
+    
     const canvas = document.getElementById('canvas');
     const infoFloat = document.getElementById('info-float');
-    
+    infoName.innerHTML = `<h5>Name: ${sessionStorage.getItem("username")}</h5>`;
     if (!video || !info || !infoFloat || !canvas) return null;
 
     let msg = '';
@@ -423,4 +430,5 @@ async function main() {
 }
 
 // start processing as soon as page is loaded
+rtc.main();
 window.onload = main;

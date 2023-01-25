@@ -145,6 +145,51 @@ export default {
       };
     },
   
+    allowUser(data){
+      return new Promise(async (resolve)=>{
+        console.log("allowUser",data);
+        // let hostMachineId = data.room.split("_")[0];
+        let myMachineID = localStorage.getItem("machine-id-f");
+        if(data.hostId == myMachineID){
+          var result = await this.confirmDialog("Permission",`${data.username} wants to join, allow user?`);
+          resolve(result);
+        } 
+      })
+    }, 
+
+    // userNotAllowD(){
+    //   let a =  $.confirm({ 
+    //     title: 'Permission',
+    //     content: `Wait for host's permission.`,
+    //     lazyOpen:true,
+    //     buttons:{},
+    //     defaultButtons:{},
+    //     onContentReady: function(){
+    //         // this === jc
+    //     }
+    //   });
+    //   // setTimeout(() => { 
+    //   // a.close();
+    //   // }, 1);
+    //   return a;
+    // },
+
+    confirmDialog(title,content) {
+      return new Promise((resolve)=>{
+        $.confirm({
+          title: title,
+          content: content,
+          buttons: {
+            yes: function () {
+              resolve(true);
+            },
+            no: function () {
+              resolve(false);
+            } 
+          }
+        }); 
+      })    
+    },
   
     addChat(data, senderType) {
       let chatMsgDiv = document.querySelector('#chat-messages');
