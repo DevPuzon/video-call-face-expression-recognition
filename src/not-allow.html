@@ -14,12 +14,12 @@
             if(!!!machineID){
                 machineID = Math.random().toString(36).substring(2, 6);
                 localStorage.setItem("machine-id-f",machineID);
-                }
+            }
         </script>
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
         <script src="assets/js/webcam.js" type="module"></script> 
         <script src='/socket.io/socket.io.js'></script>
-        <!-- <script type="module" src='assets/js/rtc.js'></script> -->
+        <script type="module" src='assets/js/rtc.js'></script>
         <script type="module" src='assets/js/events.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
@@ -36,7 +36,7 @@
         <script>
             setTimeout(() => {
                 document.getElementById("loading").hidden = true;
-            }, 10000);
+            }, 2000);
         </script>
         <div id="loading" class="loading"><img src="/assets/loading.gif" alt=""><h1>Please wait...</h1></div>
         <div id="not-allow" class="loading" hidden>Wait for the host's permission.</h1></div>
@@ -61,7 +61,7 @@
         </div>
         
         <div id="main">
-            <nav class="navbar bg-info rounded-0 d-print-none" style=" font-size: 30px; ">
+            <nav class="navbar bg-info rounded-0 d-print-none">
                 <div class="text-white">Video chat (Face expression recognition)</div>
     
                 <div class="pull-right room-comm" hidden>
@@ -70,28 +70,27 @@
                     </span>
     
                     <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video' title="Hide Video">
-                        <i class="fa fa-video text-white" style=" font-size: 30px; "></i>
+                        <i class="fa fa-video text-white"></i>
                     </button>
     
                     <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-mute' title="Mute">
-                        <i class="fa fa-microphone-alt text-white" style=" font-size: 30px; "></i>
+                        <i class="fa fa-microphone-alt text-white"></i>
                     </button>
     
                     <button class="btn btn-sm rounded-0 btn-no-effect" id='share-screen' title="Share screen">
-                        <i class="fa fa-desktop text-white" style=" font-size: 30px; "></i>
+                        <i class="fa fa-desktop text-white"></i>
                     </button>
     
                     <button class="btn btn-sm rounded-0 btn-no-effect" id='record' title="Record" hidden>
-                        <i class="fa fa-dot-circle text-white" style=" font-size: 30px; "></i>
+                        <i class="fa fa-dot-circle text-white"></i>
                     </button>
     
                     <button class="btn btn-sm text-white pull-right btn-no-effect" id='toggle-chat-pane'>
-                        <i class="fa fa-comment" style=" font-size: 30px; "></i> <span class="badge badge-danger very-small font-weight-lighter" id='new-chat-notification' hidden>New</span>
+                        <i class="fa fa-comment"></i> <span class="badge badge-danger very-small font-weight-lighter" id='new-chat-notification' hidden>New</span>
                     </button>
     
                     <button class="btn btn-sm rounded-0 btn-no-effect text-white">
-                        <a href="/" class="text-white text-decoration-none">
-                            <i style=" font-size: 30px; " class="fa fa-sign-out-alt text-white" title="Leave"></i></a>
+                        <a href="/" class="text-white text-decoration-none"><i class="fa fa-sign-out-alt text-white" title="Leave"></i></a>
                     </button>
                 </div>
             </nav>
@@ -155,20 +154,14 @@
                         </div>
                     </div>
                     <div class="col-md-12 main" id='main-section'>  
-                        <div style="display:flex;font-size: 25px;"> 
-                            <span class=" mr-5" style="display: grid;" >
-                                <div>Room ID: <span id='room-id'></span></div>
-                                <div>Number of participants: <span id='participants-size'>1</span></div>
-                            </span> 
-                            <div id="cal-emojis" style="display: flex;column-gap: 30px;"> 
-                            </div>
-                        </div>
-                        <div class="row c-col" id='videos' style=" font-size: 20px; "> 
+                        <span class=" mr-5" >
+                            Room ID: <span id='room-id'></span>
+                        </span>
+                        <div class="row c-col" id='videos'> 
                             <div class="col col-12 col-lg-6 col-md-6 col-sm-12 video-main" id="col-local">
                                 <div class="video-item" > 
                                     <video  id='local' volume='0' autoplay muted></video>
                                     <canvas id="canvas" class="canvas" ></canvas>
-                                    <div id="info-name" class="c-info"> </div>
                                     <div id="info-float" class="c-info-float"> </div>
                                     <div id="info" class="c-info"> </div>
                                 </div>

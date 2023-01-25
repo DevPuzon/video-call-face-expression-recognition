@@ -9,7 +9,7 @@
 }
 
 .settings-main{
-    margin-bottom: 14px;
+    margin-bottom: 0px;
 }
 
 .settings-main h6{
@@ -74,11 +74,11 @@
     border: 0;
     border-top: 1px groove white;
     border-left: 1px groove white;
-    font-size: small;
+    font-size: larger;
 }
 
 .chat-box::placeholder{
-    font-size: small;
+    font-size: larger;
     font-weight: lighter;
     font-style: italic;
 }
@@ -106,7 +106,7 @@
     bottom: 0;
     background-color:rgba(0, 0, 0, 0.5);
     z-index:300000;
-    padding: 10px;
+    padding: 50px;
     width: 100%;
     text-align: center;
     visibility: hidden;
@@ -136,7 +136,7 @@
 
 
 .sender-info{
-    font-size: smaller;
+    font-size: larger;
     margin-top: 5px;
     align-self: flex-end;
 }
@@ -144,14 +144,14 @@
 
 .msg{
     font-weight: 400;
-    font-size: 12px;
+    font-size: 20px;
     color: black;
     background-color: wheat;
 }
 
 
 .chat-card{
-    border-radius: 6px;
+    border-radius: 30px;
 }
 
 
@@ -160,7 +160,7 @@
 }
 
 .very-small{
-    font-size: 6px !important;
+    font-size: 20px !important;
 }
 
 
@@ -181,7 +181,7 @@
 
 
 .record-option{
-    height: 200px;
+    height: 300px;
     border-radius: 10%;
     border: 1px solid #17a2b8;
     cursor: pointer;
@@ -307,6 +307,11 @@
     margin-top: 5px;
 }
 
+.c-info h5{
+    margin: 0px;
+    margin-bottom: 2px;
+    color:#fff;
+}
 .c-info p{
     margin: 0px;
     margin-bottom: 2px;
