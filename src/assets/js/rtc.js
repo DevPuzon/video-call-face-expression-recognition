@@ -791,7 +791,7 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
   infoFloat.innerHTML = `<p> ${capitalizeFirstLetter(updateEmoji(expression[0][0]))}</p>`;
 }
 async function detectVideo(video, info,infoFloat,canvas) {  
-    info.style.width = video.clientWidth+"px"; 
+    // info.style.width = video.clientWidth+"px"; 
     if (!video || video.paused) return false;
     const t0 = performance.now();
     faceapi
