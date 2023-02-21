@@ -13,7 +13,7 @@ const stream = ( socket ) => {
 
         let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
         if(roomFI < 0){
-            rooms.push({room:data.room,host:data.socketId,participants:[],emojis:[0,0,0,0,0,0,0]}); 
+            rooms.push({room:data.room,host:data.socketId,participants:[],socketIdEmojiIndex:{},emojis:[0,0,0,0,0,0,0]}); 
             socket.join( data.socketId+"-host" );
             console.log("subscribe allow-user",data.socketId+"-host");
         }
@@ -105,14 +105,30 @@ const stream = ( socket ) => {
     } ); 
 
     socket.on( 'update-emojis', ( data ) => { 
+        let {socketId,emojiIndex} = data;
         let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
         let room = rooms[roomFI];
         if(roomFI >= 0){
-            for(let [i,emoji] of room.emojis.entries()){
-                rooms[roomFI].emojis[i] += data.emojis[i];
-            }
-            console.log( 'update-emojis',data,rooms[roomFI].emojis);
-            socket.emit( 'update-emojis', { room: data.room, emojis: rooms[roomFI].emojis } );
+            rooms[roomFI].socketIdEmojiIndex[socketId] = emojiIndex;
+            rooms[roomFI].emojis = [0,0,0,0,0,0,0]; 
+            for(let val of Object.keys(rooms[roomFI].socketIdEmojiIndex) ){
+                rooms[roomFI].emojis[
+                    rooms[roomFI].socketIdEmojiIndex[val]
+                ] += 1;
+            }``
+            // for(let [i,emoji] of room.emojis.entries()){
+            //     rooms[roomFI].emojis[i] += data.emojis[i];
+            // } 
+            console.log( 'update-emojis',data,
+            rooms[roomFI],
+            rooms[roomFI].emojis); 
+
+            socket.emit( 'update-emojis', 
+            { 
+                room: data.room, 
+                emojis: rooms[roomFI].emojis,
+                participantsEmoji : rooms[roomFI].socketIdEmojiIndex
+            });
         }
     } );
 

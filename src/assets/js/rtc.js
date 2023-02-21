@@ -11,6 +11,7 @@
  const username = sessionStorage.getItem( 'username' );
 
  let socket = io( '/stream' );
+ var socketId = '';
 export function main(){ 
     window.addEventListener( 'load', () => {
     } );
@@ -36,7 +37,6 @@ export function main(){
         var pc = [];
 
 
-        var socketId = '';
         var randomNumber = `__${h.generateRandomString()}__${h.generateRandomString()}__`;
         var myStream = '';
         var screen = '';
@@ -112,8 +112,48 @@ export function main(){
                 h.addChat( data, 'remote' );
             } );
             
+            function updateParticipantEmojiUI(participantsEmoji){
+                const updateEmoji = (emojiIndex)=>{
+                    let expression= "";
+                    if(emojiIndex == 0){
+                      expression = "😐";
+                    }
+                    if(emojiIndex == 1){
+                      expression = "😊";
+                    }
+                    if(emojiIndex == 2){
+                      expression = "😔";
+                    }
+                    if(emojiIndex == 3){
+                      expression = "😠";
+                    }
+                    if(emojiIndex == 4){
+                      expression = "😨";
+                    }
+                    if(emojiIndex == 5){
+                      expression = "🤢";
+                    }
+                    if(emojiIndex == 6){
+                      expression = "😲";
+                    }
+                    //console.log("expression",expression);
+                    return expression;
+                  }
+                for(let val of Object.keys(participantsEmoji)){
+                    if(val != socketId){
+                        let emojiIndex = participantsEmoji[val];
+                        console.log("updateParticipantEmojiUI",participantsEmoji,val,emojiIndex,socketId);
+                        if(document.getElementById(`${val}-info-float`)){ 
+                            document.getElementById(`${val}-info-float`).innerHTML = `<p>${updateEmoji(emojiIndex)}</p>`;
+                            document.getElementById(`${val}-info`).innerHTML = `<p>${getOtherEmotion(emojiIndex)}</p>`;
+                        }
+                    }
+                }
+            }
+
             socket.on( 'update-emojis', ( data ) => {
-                console.log( 'update-emojis',data)
+                console.log( 'update-emojis',data);
+                updateParticipantEmojiUI(data.participantsEmoji)
                 calculateEmojis(data.emojis);
             } );
 
@@ -316,11 +356,11 @@ export function main(){
                     document.getElementById( 'videos' ).appendChild( mainVidDiv ); 
                     
                     video.onloadeddata = async () => {
-                        setTimeout(() => { 
-                        canvas.width = video.videoWidth; 
-                        canvas.height = video.videoHeight;
-                        detectVideo(video, info,infoFloat,canvas);
-                        }, 10000);
+                        // setTimeout(() => { 
+                        // canvas.width = video.videoWidth; 
+                        // canvas.height = video.videoHeight;
+                        // // detectVideo(video, info,infoFloat,canvas);
+                        // }, 10000);
                     }
                     h.adjustVideoElemSize();
                 }
@@ -607,103 +647,199 @@ export function main(){
  
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-  
-  function getOtherEmotion(emotion){
-    let emotions = {
-      "neutral":[
+}
+
+function getOtherEmotion(emotion){
+let emotions = {
+    // neutral
+    0:[
         'Confidence',
         'Relaxed'
-      ],
-      "happy":[
-        'Affection',
-        'Amused',
-        'Confidence',
-        'Happiness',
-        'Love',
-        'Relief',
-        'Contentment',
-        'Amusement',
-        'Joy',
-        'Pride',
-        'Excitement',
-        'Peace',
-        'Satisfaction',
-      ],
-      "sad":[
-        'Fatigue',
-        'Sympathy' , 
-        'Lonely',
-        'Heartbroken',
-        'Gloomy',
-        'Disappointed',
-        'Hopeless',
-        'Grieved',
-        'Unhappy',
-        'Lost',
-        'Troubled',
-        'Resigned',
-        'Miserable' 
-      ],
-      "angry":[ 
-        'Jealous' ,
-        'Irritated',
-        'Upset',
-        'Mad',
-        'Annoyed',
-        'Frustrated',
-        'Peeved',
-        'Contrary',
-        'Bitter',
-        'Infuriated' ,
-        'Cheated',
-        'Vengeful',
-        'Insulted' ,
-      ],
-      "fearful":[
-        'Worry',
-        'Embarrassed',
-        'Terror',
-        'Panic',
-        'Scare',
-        'Worried',
-        'Doubtful',
-        'Nervous',
-        'Anxious',
-        'Terrified',
-        'Panicked',
-        'Horrified',
-        'Desperate',
-        'Confused',
-        'Stressed'
-      ],
-      "disgusted":[
-        'Irritated',
-        'Upset',
-        'Mad',
-        'Fed Up',
-        'Sick',
-        'Dislike',
-        'Revulsion',
-        'Loathing',
-        'Disapproving',
-        'Offended',
-        'Horrified',
-        'Uncomfortable',
-        'Nauseated',
-        'Disturbed',
-        'Withdrawn',
-        'Aversion' 
-      ],
-      "surprised":[
-        'Shocked',
-        'Amazed',
-        'Staggered' 
-      ]
-    }
-  
-    return emotions[emotion].slice(0, -1).join(", ") + ", and "+emotions[emotion].pop();
-  }
+    ],
+    // happy
+    1:[
+    'Affection',
+    'Amused',
+    'Confidence',
+    'Happiness',
+    'Love',
+    'Relief',
+    'Contentment',
+    'Amusement',
+    'Joy',
+    'Pride',
+    'Excitement',
+    'Peace',
+    'Satisfaction',
+    ],
+    // sad
+    2:[
+    'Fatigue',
+    'Sympathy' , 
+    'Lonely',
+    'Heartbroken',
+    'Gloomy',
+    'Disappointed',
+    'Hopeless',
+    'Grieved',
+    'Unhappy',
+    'Lost',
+    'Troubled',
+    'Resigned',
+    'Miserable' 
+    ],
+    // angry
+    3:[ 
+    'Jealous' ,
+    'Irritated',
+    'Upset',
+    'Mad',
+    'Annoyed',
+    'Frustrated',
+    'Peeved',
+    'Contrary',
+    'Bitter',
+    'Infuriated' ,
+    'Cheated',
+    'Vengeful',
+    'Insulted' ,
+    ],
+    // fearful
+    4:[
+    'Worry',
+    'Embarrassed',
+    'Terror',
+    'Panic',
+    'Scare',
+    'Worried',
+    'Doubtful',
+    'Nervous',
+    'Anxious',
+    'Terrified',
+    'Panicked',
+    'Horrified',
+    'Desperate',
+    'Confused',
+    'Stressed'
+    ],
+    // disgusted
+    5:[
+    'Irritated',
+    'Upset',
+    'Mad',
+    'Fed Up',
+    'Sick',
+    'Dislike',
+    'Revulsion',
+    'Loathing',
+    'Disapproving',
+    'Offended',
+    'Horrified',
+    'Uncomfortable',
+    'Nauseated',
+    'Disturbed',
+    'Withdrawn',
+    'Aversion' 
+    ],
+    // surprised
+    6:[
+    'Shocked',
+    'Amazed',
+    'Staggered' 
+    ]
+    // "neutral":[
+    // 'Confidence',
+    // 'Relaxed'
+    // ],
+    // "happy":[
+    // 'Affection',
+    // 'Amused',
+    // 'Confidence',
+    // 'Happiness',
+    // 'Love',
+    // 'Relief',
+    // 'Contentment',
+    // 'Amusement',
+    // 'Joy',
+    // 'Pride',
+    // 'Excitement',
+    // 'Peace',
+    // 'Satisfaction',
+    // ],
+    // "sad":[
+    // 'Fatigue',
+    // 'Sympathy' , 
+    // 'Lonely',
+    // 'Heartbroken',
+    // 'Gloomy',
+    // 'Disappointed',
+    // 'Hopeless',
+    // 'Grieved',
+    // 'Unhappy',
+    // 'Lost',
+    // 'Troubled',
+    // 'Resigned',
+    // 'Miserable' 
+    // ],
+    // "angry":[ 
+    // 'Jealous' ,
+    // 'Irritated',
+    // 'Upset',
+    // 'Mad',
+    // 'Annoyed',
+    // 'Frustrated',
+    // 'Peeved',
+    // 'Contrary',
+    // 'Bitter',
+    // 'Infuriated' ,
+    // 'Cheated',
+    // 'Vengeful',
+    // 'Insulted' ,
+    // ],
+    // "fearful":[
+    // 'Worry',
+    // 'Embarrassed',
+    // 'Terror',
+    // 'Panic',
+    // 'Scare',
+    // 'Worried',
+    // 'Doubtful',
+    // 'Nervous',
+    // 'Anxious',
+    // 'Terrified',
+    // 'Panicked',
+    // 'Horrified',
+    // 'Desperate',
+    // 'Confused',
+    // 'Stressed'
+    // ],
+    // "disgusted":[
+    // 'Irritated',
+    // 'Upset',
+    // 'Mad',
+    // 'Fed Up',
+    // 'Sick',
+    // 'Dislike',
+    // 'Revulsion',
+    // 'Loathing',
+    // 'Disapproving',
+    // 'Offended',
+    // 'Horrified',
+    // 'Uncomfortable',
+    // 'Nauseated',
+    // 'Disturbed',
+    // 'Withdrawn',
+    // 'Aversion' 
+    // ],
+    // "surprised":[
+    // 'Shocked',
+    // 'Amazed',
+    // 'Staggered' 
+    // ]
+}
+
+return emotions[emotion].slice(0, -1).join(", ") + ", and "+emotions[emotion].pop();
+}
  // helper function to draw detected faces
  let emojisCounts =[0,0,0,0,0,0,0];
 function drawFaces(info,infoFloat, data, fps,canvas) {
@@ -815,15 +951,19 @@ async function detectVideo(video, info,infoFloat,canvas) {
 }
 
 let addEmojiInterval = null;
+let lastEmojiIndex = -1;
 let isUpdateEmoji = true;
 export function addEmoji(i){ 
-    if(isUpdateEmoji){
-        setTimeout(() => { 
-            emojisCounts[i] = 1;
-            console.log('addEmoji', { room: room, emojis: emojisCounts } )
-            socket.emit( 'update-emojis', { room: room, emojis: emojisCounts } ); 
+    if(isUpdateEmoji &&  lastEmojiIndex != i){
+        setTimeout(() => {  
+            // console.log('addEmoji', { room: room, emojis: emojisCounts } ) 
+            // socket.emit( 'update-emojis', { room: room, emojis: emojisCounts } ); 
+            
+            console.log('addEmoji', { room: room, socketId:socketId, emojiIndex: i } ) 
+            socket.emit( 'update-emojis', { room: room,  socketId:socketId, emojiIndex: i } ); 
+
             isUpdateEmoji = true;
-        }, 3000);
+        }, 1000);
     }
     isUpdateEmoji = false;
 }
@@ -839,7 +979,7 @@ export function calculateEmojis(emojis){
     <div class="surprised" style="display:grid;text-align: center;">😲<p style=" display: grid; text-align: center; margin: 0px; ">${intToString(emojis[6])}</p></div>
     `
 }
-calculateEmojis(emojisCounts)
+// calculateEmojis(emojisCounts)
 function intToString(num) {
     num = num.toString().replace(/[^0-9.]/g, '');
     if (num < 1000) {
