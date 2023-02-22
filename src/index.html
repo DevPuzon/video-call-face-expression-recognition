@@ -36,10 +36,15 @@
         <script>
             setTimeout(() => {
                 document.getElementById("loading").hidden = true;
-            }, 10000);
+            }, 1000);
+            setInterval(()=>{
+                var vids = document.getElementById("videos");
+                var length = vids.getElementsByClassName("video-main").length; 
+                document.getElementById("participants-size").innerHTML = length;
+            },1000)
         </script>
         <div id="loading" class="loading"><img src="/assets/loading.gif" alt=""><h1>Please wait...</h1></div>
-        <div id="not-allow" class="loading" hidden>Wait for the host's permission.</h1></div>
+        <div id="not-allow" class="loading" style="background: rgba(0, 0, 0,.3) !important;" hidden>Wait for the host's permission.</h1></div>
        
         <div class="custom-modal" id='recording-options-modal'>
             <div class="custom-modal-content">

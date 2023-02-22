@@ -51,6 +51,7 @@ export function main(){
         socket.on( 'connect', () => {
                         
             let socketIdAdmin = "";
+            let participantSocketIDs =[];
             if(room){
                 socketIdAdmin = room.split("_")[0]
             }
@@ -63,6 +64,11 @@ export function main(){
             document.getElementById('randomNumber').innerText = randomNumber;
 
             
+            socket.emit( 'lobby', {
+                room: room,
+                socketId: socketId,
+                username:username
+            }); 
 
             // socket.emit( 'pre-join', {
             //     room: room,
@@ -75,24 +81,12 @@ export function main(){
             //     pc.push( socketId );
             //  }, 5000);
             console.log({room:room,socketId:socketId});
-            // let forceAllow = localStorage.getItem("allow");
-            // if(forceAllow == "true"){ 
-            if(0){ 
-                connectUser();
-                document.getElementById("not-allow").hidden = true;
-            }else{ 
-                socket.emit( 'lobby', {
-                    room: room,
-                    socketId: socketId,
-                    username:username
-                }); 
-            }
 
             if(socketIdAdmin != socketId){
                 //Is Not User Admin
                 document.getElementById("not-allow").hidden = false;
                 socket.emit( 'allow-user', {room:room,socketId:socketId,socketIdAdmin:socketIdAdmin,username:username } );
-            }else if(socketIdAdmin == socketId){
+            }else{
                 //Is User Admin  
                 connectUser(); 
                 socket.on( 'allow-user', async ( data ) => {
@@ -105,7 +99,6 @@ export function main(){
             socket.on( 'set-allow-user', ( data ) => {
                 console.log('set-allow-user',data)
                 if(data.isAllow){ 
-                    localStorage.setItem("allow","true");
                     connectUser();
                     document.getElementById("not-allow").hidden = true;
                 }else{ 
@@ -185,18 +178,23 @@ export function main(){
                     calculateEmojis(data.emojis);
                 } ); 
                 
+                
+            
                 socket.on( 'new user', ( data ) => {  
                     console.log('newUserStart1',data);
-                    socket.emit( 'newUserStart', { to: data.socketId, sender: socketId,username:username,roomDetails:data.roomDetails } );
+                    // socket.emit( 'newUserStart', { to: data.socketId, sender: socketId,username:username,roomDetails:data.roomDetails } );
+                    if(participantSocketIDs[data.socketId]){ return; }
+                    participantSocketIDs.push(data.socketId);
+                    console.log('newUserStart1.1',data,participantSocketIDs);
                     pc.push( data.socketId );
                     initConnectionUser( true, data.socketId,data.username,data.roomDetails );
                 } ); 
-                
-                socket.on( 'newUserStart', ( data ) => { 
-                    console.log('newUserStart2',data);
-                    pc.push( data.sender );
-                    initConnectionUser( false, data.sender,data.username,data.roomDetails );
-                } ); 
+
+                // socket.on( 'newUserStart', ( data ) => { 
+                //     console.log('newUserStart2',data);
+                //     pc.push( data.sender );
+                //     initConnectionUser( false, data.sender,data.username,data.roomDetails );
+                // } ); 
 
                 socket.on( 'ice candidates', async ( data ) => {
                     data.candidate ? await pc[data.sender].addIceCandidate( new RTCIceCandidate( data.candidate ) ) : '';
@@ -272,9 +270,10 @@ export function main(){
 
         function initConnectionUser( createOffer, partnerName,partnerUsername,roomDetails ) {
             console.log("initConnectionUser",createOffer, partnerName,partnerUsername,roomDetails);
-            // document.getElementById("participants-size").innerHTML = roomDetails.participants.length ? roomDetails.participants.length + 1 : 1 ;
+            document.getElementById("participants-size").innerHTML = roomDetails.participants.length ? roomDetails.participants.length + 1 : 1 ;
 
             pc[partnerName] = new RTCPeerConnection( h.getIceServer() );
+            console.log("initConnectionUser pc[partnerName]",pc[partnerName]);
  
             if ( screen && screen.getTracks().length ) {
                 screen.getTracks().forEach( ( track ) => {
@@ -286,8 +285,6 @@ export function main(){
                 myStream.getTracks().forEach( ( track ) => {
                     pc[partnerName].addTrack( track, myStream );//should trigger negotiationneeded event
                 } );
-
-                // pc[partnerName].addStream(myStream);
             }
 
             else {
@@ -326,9 +323,7 @@ export function main(){
             };
 
 
-            // pc[partnerName].onaddstream = function (e) { 
-            //     console.log("onaddstream",str,partnerName,e);
-            // };
+
             //add
             pc[partnerName].ontrack = ( e ) => {
                 let str = e.streams[0];
@@ -338,8 +333,8 @@ export function main(){
                 }
 
                 else {
-                    //video elem
-                    console.log("pc[partnerName].ontrack1=",str,partnerName,e);
+                    //video elem 
+                    console.log("pc[partnerName].ontrack=1",str,partnerName,e);
                     let video = document.createElement( 'video' );
                     video.id = `${ partnerName }-video`;
                     video.srcObject = str;

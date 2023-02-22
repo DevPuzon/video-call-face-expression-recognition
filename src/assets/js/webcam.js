@@ -307,8 +307,9 @@ function drawFaces(info,infoFloat, data, fps,canvas) {
   infoFloat.innerHTML = `<p> ${capitalizeFirstLetter(updateEmoji(expression[0][0]))}</p>`;
 }
 
-async function detectVideo(video, info,infoFloat,canvas) { 
+async function detectVideo(video, info,infoFloat,canvas) {  
   if (!video || video.paused) return false;
+  
   const t0 = performance.now();
   faceapi
     .detectAllFaces(video, optionsSSDMobileNet)
@@ -377,8 +378,7 @@ function setupCamera() {
     if (settings.aspectRatio) settings.aspectRatio = Math.trunc(100 * settings.aspectRatio) / 100;
     log(`Camera active: ${track.label}`); // ${str(constraints)}
     log(`Camera settings: ${str(settings)}`); 
-    video.onloadeddata = async () => {
-           
+    video.onloadeddata = async (el) => {   
       video.play();
       // @ts-ignore
       canvas.width = video.videoWidth;
