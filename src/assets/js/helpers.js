@@ -147,11 +147,13 @@ export default {
   
     allowUser(data){
       return new Promise(async (resolve)=>{
-        console.log("allowUser",data);
         // let hostMachineId = data.room.split("_")[0];
         let myMachineID = localStorage.getItem("machine-id-f");
-        if(data.hostId == myMachineID){
+        console.log("allowUser",data,data.socketIdAdmin == myMachineID);
+        if(data.socketIdAdmin == myMachineID){
+          console.log("allowUser1");
           var result = await this.confirmDialog("Permission",`${data.username} wants to join, allow user?`);
+            
           resolve(result);
         } 
       })

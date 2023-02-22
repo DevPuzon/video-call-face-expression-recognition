@@ -1,8 +1,6 @@
 
 let rooms = []
-function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-  }
+
 const stream = ( socket ) => {
     socket.on( 'subscribe', ( data ) => {
         subscribe(data);
@@ -16,7 +14,7 @@ const stream = ( socket ) => {
         let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
         if(roomFI < 0){
             // initialize the room
-            rooms.push({room:data.room,host:data.socketId,participants:[],socketIdEmojiIndex:{},emojis:[0,0,0,0,0,0,0]}); 
+            rooms.push({room:data.room,host:data.socketId,participants:[],socketIdEmojiIndex:{},emojis:[0,0,0,0,0,0,0],socketIDs:{}}); 
             socket.join( data.socketId+"-host" );
             console.log("subscribe allow-user",data.socketId+"-host");
         }
@@ -39,8 +37,19 @@ const stream = ( socket ) => {
         //             socket.emit( 'new user', { room:data.room,socketId: data.socketId,username:data.username , roomDetails:rooms[roomFI]} );
         //         }
         //    }, 5000);
-        let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
-        socket.to( data.room ).emit( 'new user', { room:data.room,socketId: data.socketId,username:data.username , roomDetails:rooms[roomFI]} );
+            let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
+            rooms[roomFI].socketIDs[data.socketId] = {
+                socketId:data.socketId,
+                username:data.username
+            };
+            
+            console.log("subscribe2",rooms[roomFI]);
+            for(let partSocketId of Object.keys(rooms[roomFI].socketIDs)){
+                let partDetails = rooms[roomFI].socketIDs[partSocketId];
+
+                console.log("partSocketId",partSocketId,{ room:data.room,socketId: partDetails.socketId,username:partDetails.username , roomDetails:rooms[roomFI]});
+                socket.emit( 'new user', { room:data.room,socketId: partDetails.socketId,username:partDetails.username , roomDetails:rooms[roomFI]} );
+            }  
         }
         console.log(rooms);
     }
@@ -84,23 +93,21 @@ const stream = ( socket ) => {
     }); 
 
     socket.on( 'set-allow-user', ( data ) => {  
-        setTimeout(()=>{
-            let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
-            if(data.isAllow){
-                rooms[roomFI].participants.push(data.socketId);   
-            //     setTimeout(() => { 
-            //         socket.emit( 'new user', { room:data.room,socketId: data.socketId,username:data.username , roomDetails:rooms[roomFI]} );
-            //    }, 2000);
-            }else{
-                rooms[roomFI].participants.push(data.socketId);
-            }
-            socket.to( data.socketId ).emit( 'set-allow-user', {...data,isAllow:data.isAllow} );
-        },parseInt(randomIntFromInterval(1,5)+"000"))
+        let roomFI = rooms.findIndex((el)=>{return el.room == data.room;});
+        if(data.isAllow){
+            rooms[roomFI].participants.push(data.socketId);   
+            setTimeout(() => { 
+                socket.emit( 'new user', { room:data.room,socketId: data.socketId,username:data.username , roomDetails:rooms[roomFI]} );
+           }, 2000);
+        }else{
+            rooms[roomFI].participants.push(data.socketId);
+        }
+        socket.to( data.socketId ).emit( 'set-allow-user', {...data,isAllow:data.isAllow} );
     });  
 
-    socket.on( 'newUserStart', ( data ) => {   
-        socket.to( data.to ).emit( 'newUserStart', { sender: data.sender,username:data.username ,roomDetails:data.roomDetails } );
-    } ); 
+    // socket.on( 'newUserStart', ( data ) => {   
+    //     socket.to( data.to ).emit( 'newUserStart', { sender: data.sender,username:data.username ,roomDetails:data.roomDetails } );
+    // } ); 
 
     socket.on( 'sdp', ( data ) => {
         socket.to( data.to ).emit( 'sdp', { description: data.description, sender: data.sender } );
@@ -135,7 +142,7 @@ const stream = ( socket ) => {
             // rooms[roomFI],
             // rooms[roomFI].emojis); 
 
-            socket.to( data.room ).emit( 'update-emojis', 
+            socket.emit( 'update-emojis', 
             { 
                 room: data.room, 
                 emojis: rooms[roomFI].emojis,
